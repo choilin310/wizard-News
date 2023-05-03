@@ -42,12 +42,27 @@ app.get("/", (req, res) => {
 });
 
 // Route to display a single post
-app.get('/posts/:id', (req, res) => {
+app.get("/posts/:id", (req, res) => {
   const id = req.params.id;
   const post = postBank.find(id);
 
   if (!post.id) {
-    res.status(404).send('404 - Post not found');
+    res.status(404);
+    const html = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <title>Wizard News</title>
+      <link rel="stylesheet" href="/style.css" />
+    </head>
+    <body>
+      <header><img src="/logo.png"/>Wizard News</header>
+      <div class="not-found">
+        <p>404: Page Not Found</p>
+      </div>
+    </body>
+    </html>`;
+    res.send(html);
   } else {
     const html = `<!DOCTYPE html>
       <html>
@@ -64,12 +79,12 @@ app.get('/posts/:id', (req, res) => {
         </div>
       </body>
       </html>`;
-  
+
     res.send(html);
   }
 });
 
-const PORT = 1337;
+const { PORT = 1337 } = process.env;
 
 app.listen(PORT, () => {
   console.log(`App listening in port ${PORT}`);
